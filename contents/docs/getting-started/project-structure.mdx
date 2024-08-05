@@ -3,6 +3,71 @@ title: Project Structure
 description: This section provides an overview of Project Structure.
 ---
 
+<Tree
+className="p-2 overflow-hidden rounded-md bg-background"
+initialExpandedItems={[
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "13",
+]}
+>
+    <Folder element="src" value="1">
+      <Folder value="2" element="app">
+        <File value="3" className="py-0 rounded-sm" isSelectable={false}>
+          <p className="m-0">layout.tsx</p>
+        </File>
+        <File value="4" className="py-0 rounded-sm" isSelectable={false} >
+          <p className="m-0">page.tsx</p>
+        </File>
+        <File value="5" className="py-0 rounded-sm">
+          <Link href="/docs/useful/sitemap">
+            <p className="m-0">sitemap.ts</p>
+          </Link>
+        </File>
+        <File value="6" className="py-0 rounded-sm">
+          <Link href="/docs/useful/favicon">
+            <p className="m-0">favicon.ico</p>
+          </Link>
+        </File>
+      </Folder>
+      <Folder value="7" element="components">
+        <Folder isSelectable={false} value="8" element="ui">
+            <File value="9" className="py-0 rounded-sm">
+                <p className="m-0">non-custom-component.tsx</p>
+            </File>
+        </Folder>
+        <Folder isSelectable={false} value="8" element="shared">
+            <File value="9" className="py-0 rounded-sm">
+                <p className="m-0">custom-component.tsx</p>
+            </File>
+        </Folder>
+        <File value="10" className="py-0 rounded-sm">
+          <Link href="https://www.hyperui.dev/components/marketing/headers">
+            <p className="m-0">Header.tsx</p>
+          </Link>
+        </File>
+        <File value="11" className="py-0 rounded-sm">
+          <Link href="https://www.hyperui.dev/components/marketing/footers">
+            <p className="m-0">Footer.tsx</p>
+          </Link>
+        </File>
+      </Folder>
+      <Folder value="12" element="lib">
+        <File isSelectable={false} value="13">
+          <p>utils.ts</p>
+        </File>
+      </Folder>
+    </Folder>
+</Tree>
+
 Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam iste dolorum tempore consectetur explicabo tempora provident quia maxime, molestiae, facilis aperiam et, error illum vel ullam? Quis architecto dolore ullam
 
 ## Overview

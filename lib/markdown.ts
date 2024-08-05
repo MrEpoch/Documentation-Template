@@ -11,6 +11,8 @@ import { visit } from "unist-util-visit";
 
 // custom components imports
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { File, Folder, Tree } from "@/components/ui/file-tree";
+import Link from "next/link";
 import Pre from "@/components/pre";
 import Note from "@/components/note";
 
@@ -21,6 +23,10 @@ type MdxFrontmatter = {
 
 // add custom components
 const components = {
+  File,
+  Folder,
+  Link,
+  Tree,
   Tabs,
   TabsContent,
   TabsList,

@@ -1,0 +1,95 @@
+---
+title: Favicon
+description: Jak vytvořit favicon pro nextjs aplikaci.
+---
+
+Favicona je ikona aplikace co uvidí uživatel, je umístěna v /app složce.
+
+<Tree
+className="p-2 overflow-hidden rounded-md bg-background"
+initialExpandedItems={[
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "7",
+  "8",
+]}
+>
+    <Folder element="src" value="1">
+      <Folder value="2" element="app">
+        <File value="3" className="py-0 rounded-sm" isSelectable={false}>
+          <p className="m-0">...</p>
+        </File>
+        <File value="4" className="py-0 rounded-sm">
+          <p className="m-0">favicon.ico</p>
+        </File>
+      </Folder>
+      <Folder isSelectable={false} value="5" element="components">
+        <File isSelectable={false} value="6" className="py-0 rounded-sm">
+            <p className="m-0">...</p>
+        </File>
+      </Folder>
+      <Folder isSelectable={false} value="7" element="lib">
+        <File isSelectable={false} value="8">
+          <p>...</p>
+        </File>
+      </Folder>
+    </Folder>
+</Tree>
+
+## Vytvoření
+
+**[design loga](https://www.canva.com/)**
+
+---
+
+**[favicon generator](https://realfavicongenerator.net/)**
+
+## Použití
+
+Rozbalíme .zip soubor a vložíme favicon.ico, apple-touch-icon.png a favicom-32x32.png do /app složky
+pod názvem `favicon.ico`, `apple-icon.png` a `icon.png`.
+
+<Tree
+className="p-2 overflow-hidden rounded-md bg-background"
+initialExpandedItems={[
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "7",
+  "8",
+  "9",
+  "10",
+]}
+>
+    <Folder element="src" value="1">
+      <Folder value="2" element="app">
+        <File value="3" className="py-0 rounded-sm" isSelectable={false}>
+          <p className="m-0">...</p>
+        </File>
+        <File value="4" className="py-0 rounded-sm">
+          <p className="m-0">favicon.ico</p>
+        </File>
+        <File value="5" className="py-0 rounded-sm">
+          <p className="m-0">apple-icon.png</p>
+        </File>
+        <File value="6" className="py-0 rounded-sm">
+          <p className="m-0">icon.png</p>
+        </File>
+      </Folder>
+      <Folder isSelectable={false} value="7" element="components">
+        <File isSelectable={false} value="8" className="py-0 rounded-sm">
+            <p className="m-0">...</p>
+        </File>
+      </Folder>
+      <Folder isSelectable={false} value="9" element="lib">
+        <File isSelectable={false} value="10">
+          <p>...</p>
+        </File>
+      </Folder>
+    </Folder>
+</Tree>

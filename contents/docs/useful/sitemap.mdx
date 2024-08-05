@@ -1,0 +1,73 @@
+---
+title: Sitemap
+description: Jak použít sitemap pro google indexování s nextjs.
+---
+
+Sitemapu lze vytvořit s online generátory jako je [xml-sitemaps](https://www.xml-sitemaps.com/) nebo s nativní generací
+od nextjs [sitemap.ts](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap) .
+
+## Použití
+
+```typescript
+import { MetadataRoute } from "next";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  return [
+    {
+      url: "https://portfolio.stencukpage.com"
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 1,
+    },
+    {
+      url: "https://portfolio.stencukpage.com/services",
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.8,
+    },
+  ];
+}
+```
+
+## Pro komplikovanější připady
+
+```typescript
+import { getPosts } from "@/lib/posts";
+import { MetadataRoute } from "next";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Dynamická data
+
+  const posts = await getPosts();
+  return [
+    {
+      url: "https://portfolio.stencukpage.com",
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 1,
+    },
+    {
+      url: "https://portfolio.stencukpage.com/services",
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.8,
+    },
+
+    // Data jsou pak rozdělena na jednotlivé části
+
+    ...posts.map((post: any) => ({
+      url: `https://portfolio.stencukpage.com/blog/${post.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "never",
+      priority: 0.5,
+    })),
+  ];
+}
+```
+
+## Parametry
+
+- **`url`**: URL webové stránky ve formátu `--protokol--://--url--.--domain--`
+- **`lastModified`**: Většinou nechám `new Date()` ale může být dynamické podle updatu postu blogu
+- **`changeFrequency`**: **`[never | yearly | monthly | weekly | daily | hourly | always]`**
+- **`priority`**: **`[0-1]`**

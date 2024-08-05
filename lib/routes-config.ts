@@ -1,15 +1,11 @@
 // for page navigation & to sort on leftbar
 export const ROUTES = [
   {
-    title: "Getting Started",
+    title: "Začátek",
     href: "getting-started",
     items: [
-      { title: "Introduction", href: "/introduction" },
-      { title: "Installation", href: "/installation" },
-      { title: "Quick Start Guide", href: "/quick-start-guide" },
-      { title: "Project Structure", href: "/project-structure" },
-      { title: "Changelog", href: "/changelog" },
-      { title: "FAQ", href: "/faq" },
+      { title: "Úvod", href: "/introduction" },
+      { title: "Struktura", href: "/project-structure" },
     ],
   },
   {
@@ -43,6 +39,14 @@ export const ROUTES = [
       { title: "useTheme", href: "/use-theme" },
       { title: "useRouter", href: "/use-router" },
       { title: "useData", href: "/use-data" },
+    ],
+  },
+  {
+    title: "Užitečné",
+    href: "useful",
+    items: [
+      { title: "Sitemap", href: "/sitemap" },
+      { title: "Favicon", href: "/favicon" },
     ],
   },
 ];

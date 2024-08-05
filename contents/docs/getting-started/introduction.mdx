@@ -1,71 +1,192 @@
 ---
-title: Introduction
-description: This section provides an overview of Introduction.
+title: Úvod
+description: Úvod do mého vývoje
 ---
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam iste dolorum tempore consectetur explicabo tempora provident quia maxime, molestiae, facilis aperiam et, error illum vel ullam? Quis architecto dolore ullam
+Tato dokumentace slouží k zaznamenání mého stylu vývoje a dokumentování jednotlivých nástrojů co používám.
 
-## Getting Started
+## Začátek
 
-To begin using the Documentation Template, follow these simple steps:
+K začátku mého vývoje mám pár krátkých kroků
 
-1. **Clone the Repository**: Start by cloning the repository to your local machine.
-2. **Install Dependencies**: If any dependencies are required, follow the installation instructions provided.
-3. **Customize**: Replace placeholder content with your actual documentation.
-4. **Publish**: Once customized, publish your documentation for others to access.
+1. **Nastartuju Nextjs**: Začnu s quickstartem [nextjs](https://nextjs.org/docs/getting-started/installation).
+2. **Stáhnu základní knihovny**: Moje základní knihovny jsou většinou
+   [shadcn ui](https://ui.shadcn.com/docs/installation/next) a
+   [lucide react](https://lucide.dev/guide/installation#react), občas i
+   [framer motion](https://www.framer.com/motion/introduction/)
+   s [galerií](https://photoswipe.com/getting-started/).
+3. **Vyberu barvy**: Možností mnoho top 4 jsou ale
+   [shadcn themes](https://ui.shadcn.com/themes),
+   [tintmint](https://tintmint.net/),
+   [coolors](https://coolors.co/)
+   a [realtime colors](https://www.realtimecolors.com/?colors=050315-fbfbfe-2f27ce-dedcff-433bff&fonts=Inter-Inter).
+4. **Nakonec vyberu fonty**: Fonty co vybírám jsou googly fonty co jsou podporovány nextjs a tailwindcss
+   [nextjs font doc](https://nextjs.org/docs/app/building-your-application/optimizing/fonts#with-tailwind-css).
 
-## Blockquotes
+## Nextjs quickstart
 
-Blockquotes are useful for emphasizing key points or quoting external sources:
+```bash
+ pnpm dlx create-next-app@latest
+```
 
-> "Documentation is a love letter that you write to your future self." - Damian Conway
+---
 
-Feel free to use blockquotes to highlight important information or quotes relevant to your documentation.
+## Shadcn přidání
 
-## Code Examples with switch
+```bash
+ pnpm dlx shadcn-ui@latest init
+```
 
-Here a custom tab component from shadcn ui is used.
+### Instalace komponenty button
 
-<Tabs defaultValue="js" className="pt-5 pb-1">
-  <TabsList className="">
-    <TabsTrigger value="js">layout.jsx</TabsTrigger>
-    <TabsTrigger value="ts">layout.tsx</TabsTrigger>
-  </TabsList>
-  <TabsContent value="js">
-  ```jsx {7} showLineNumbers
-import ThemeProvider from './theme-provider'
- 
-export default function RootLayout({ children }) {
-  return (
-    <html>
-      <body className="container">
-        <ThemeProvider>{children}</ThemeProvider>
-      </body>
-    </html>
-  )}
-````
-  </TabsContent>
-  <TabsContent value="ts">
-```tsx {11} showLineNumbers
-import ThemeProvider from './theme-provider'
- 
-export default function RootLayout({
+```bash
+ pnpm dlx shadcn-ui@latest add button
+```
+
+---
+
+## Lucide react
+
+```bash
+ pnpm dlx create-next-app@latest
+```
+
+---
+
+## Framer motion
+
+```bash
+ pnpm i framer-motion
+```
+
+### Komponent tranzise
+
+```tsx
+"use client";
+import { useInView } from "framer-motion";
+import { useRef } from "react";
+
+export function AnimatedDiv({
+  className,
   children,
+  animationLength = 0.5,
+  side = "bottom",
 }: {
-  children: React.ReactNode
+  className?: string;
+  children: React.ReactNode;
+  animationLength?: number;
+  side?: "top" | "bottom" | "left" | "right";
 }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  function setSide(sideM: "top" | "bottom" | "left" | "right") {
+    switch (sideM) {
+      case "top":
+        return "translateY(-20px)";
+      case "bottom":
+        return "translateY(20px)";
+      case "left":
+        return "translateX(-20px)";
+      case "right":
+        return "translateX(20px)";
+    }
+  }
+
   return (
-    <html>
-      <body className="container">
-        <ThemeProvider>{children}</ThemeProvider>
-      </body>
-    </html>
-  )
+    <div
+      className={className}
+      ref={ref}
+      style={{
+        opacity: isInView ? 1 : 0,
+        transform: isInView ? "none" : setSide(side),
+        transition: `all ${animationLength}s cubic-bezier(0.17, 0.55, 0.55, 1)`,
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 ```
-  </TabsContent>
-</Tabs>
 
-## Conclusion
+---
 
-Thank you for choosing the Documentation Template for your project. Whether you're documenting software, APIs, or processes, we're here to support you in creating clear and effective documentation. Happy documenting!
+## Galerie
+
+```bash
+ pnpm i --save photoswipe
+```
+
+### Komponent galerie
+
+```tsx
+"use client";
+import React, { useEffect } from "react";
+import PhotoSwipeLightbox from "photoswipe/lightbox";
+import "photoswipe/style.css";
+import Image from "next/image";
+import Link from "next/link";
+
+export default function GalleryComponent({
+  images,
+  galleryID,
+}: {
+  images: any;
+  galleryID: string;
+}) {
+  useEffect(() => {
+    let lightbox = new PhotoSwipeLightbox({
+      gallery: "#" + galleryID,
+      children: "a",
+      pswpModule: () => import("photoswipe"),
+    });
+    lightbox.init();
+
+    return () => {
+      lightbox.destroy();
+      // @ts-ignore
+      lightbox = null;
+    };
+  });
+
+  return (
+    <div className="flex flex-wrap -m-4" id={galleryID}>
+      {images.map(
+        (
+          image: {
+            title: string;
+            largeURL: string;
+            thumbnailURL: string;
+            width: number;
+            height: number;
+            description: string;
+            heading: string;
+          },
+          index: number,
+        ) => (
+          <Link
+            href={image.largeURL}
+            key={galleryID + "-" + index}
+            data-pswp-width={image.width}
+            data-pswp-height={image.height}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={image.title}
+            className="group hover:brightness-75 transition lg:w-1/3 sm:w-1/2 p-4"
+          >
+            <div className="w-full h-full overflow-hidden">
+              <Image
+                src={image.thumbnailURL}
+                className="w-full h-full object-cover group-hover:scale-[1.03]  transition object-center"
+                alt={image.title}
+                width={image.width}
+                height={image.height}
+              />
+            </div>
+          </Link>
+        ),
+      )}
+    </div>
+  );
+}
+```
