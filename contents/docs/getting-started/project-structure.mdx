@@ -4,133 +4,130 @@ description: This section provides an overview of Project Structure.
 ---
 
 <Tree
-className="p-2 overflow-hidden rounded-md bg-background"
-initialExpandedItems={[
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "7",
-  "8",
-  "9",
-  "10",
-  "11",
-  "13",
-]}
+  className="p-2 overflow-hidden rounded-md bg-background"
+  initialExpandedItems={["1", "2", "7", "14"]}
 >
-    <Folder element="src" value="1">
-      <Folder value="2" element="app">
-        <File value="3" className="py-0 rounded-sm" isSelectable={false}>
-          <p className="m-0">layout.tsx</p>
-        </File>
-        <File value="4" className="py-0 rounded-sm" isSelectable={false} >
-          <p className="m-0">page.tsx</p>
-        </File>
-        <File value="5" className="py-0 rounded-sm">
-          <Link href="/docs/useful/sitemap">
-            <p className="m-0">sitemap.ts</p>
-          </Link>
-        </File>
-        <File value="6" className="py-0 rounded-sm">
-          <Link href="/docs/useful/favicon">
-            <p className="m-0">favicon.ico</p>
-          </Link>
-        </File>
-      </Folder>
-      <Folder value="7" element="components">
-        <Folder isSelectable={false} value="8" element="ui">
-            <File value="9" className="py-0 rounded-sm">
-                <p className="m-0">non-custom-component.tsx</p>
-            </File>
-        </Folder>
-        <Folder isSelectable={false} value="8" element="shared">
-            <File value="9" className="py-0 rounded-sm">
-                <p className="m-0">custom-component.tsx</p>
-            </File>
-        </Folder>
-        <File value="10" className="py-0 rounded-sm">
-          <Link href="https://www.hyperui.dev/components/marketing/headers">
-            <p className="m-0">Header.tsx</p>
-          </Link>
-        </File>
-        <File value="11" className="py-0 rounded-sm">
-          <Link href="https://www.hyperui.dev/components/marketing/footers">
-            <p className="m-0">Footer.tsx</p>
-          </Link>
-        </File>
-      </Folder>
-      <Folder value="12" element="lib">
-        <File isSelectable={false} value="13">
-          <p>utils.ts</p>
-        </File>
-      </Folder>
+  <Folder element="src" value="1">
+    <Folder value="2" element="app">
+      <Link href="/docs/useful/hidden-folder">
+        <Folder value="3" element="_services" />
+      </Link>
+      <File value="3" className="py-0 rounded-sm" isSelectable={false}>
+        <p className="m-0">layout.tsx</p>
+      </File>
+      <File value="4" className="py-0 rounded-sm" isSelectable={false}>
+        <p className="m-0">page.tsx</p>
+      </File>
+      <File value="5" className="py-0 rounded-sm">
+        <Link href="/docs/useful/sitemap">
+          <p className="m-0">sitemap.ts</p>
+        </Link>
+      </File>
+      <File value="5" className="py-0 rounded-sm">
+        <Link href="/docs/useful/loading">
+          <p className="m-0">loading.tsx</p>
+        </Link>
+      </File>
+      <File value="5" className="py-0 rounded-sm">
+        <Link href="/docs/useful/globals-css">
+          <p className="m-0">globals.css</p>
+        </Link>
+      </File>
+      <File value="6" className="py-0 rounded-sm">
+        <Link href="/docs/useful/favicon">
+          <p className="m-0">favicon.ico</p>
+        </Link>
+      </File>
     </Folder>
+    <Folder value="7" element="components">
+      <Folder isSelectable={false} value="8" element="ui">
+        <File value="9" className="py-0 rounded-sm">
+          <p className="m-0">non-custom-component.tsx</p>
+        </File>
+      </Folder>
+      <Folder isSelectable={false} value="8" element="shared">
+        <File value="9" className="py-0 rounded-sm">
+          <p className="m-0">custom-component.tsx</p>
+        </File>
+      </Folder>
+      <File value="10" className="py-0 rounded-sm">
+        <Link href="/docs/components/header">
+          <p className="m-0">Header.tsx</p>
+        </Link>
+      </File>
+      <File value="11" className="py-0 rounded-sm">
+        <Link href="https://www.hyperui.dev/components/marketing/footers">
+          <p className="m-0">Footer.tsx</p>
+        </Link>
+      </File>
+    </Folder>
+    <Folder value="12" element="lib">
+      <File className="py-0 rounded-sm" isSelectable={false} value="13">
+        <p className="m-0">utils.ts</p>
+      </File>
+    </Folder>
+    <Folder value="14" element="types">
+      <File className="py-0 rounded-sm" value="15">
+        <Link href="/docs/useful/types">
+          <p className="m-0">index.d.ts</p>
+        </Link>
+      </File>
+    </Folder>
+  </Folder>
 </Tree>
 
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam iste dolorum tempore consectetur explicabo tempora provident quia maxime, molestiae, facilis aperiam et, error illum vel ullam? Quis architecto dolore ullam
+## Použití
 
-## Overview
+Vítej v sekci určené pro ukázku struktury mých projektů, zde je rychlý popisek toho co je co a jak to použít.
 
-Welcome to the `Project Structure` section. Here, you'll find all the information you need to get started with our application.
+### Obsah
 
-## Content
+- **Obsah /app složky**: Hlavní obsah /app složky.
+- **Komponenty**: Složka obsahující jednotlivé komponenty aplikace
+- **Knihovna**: Knihovna algoritmů a použitích knihoven třetích stran.
 
-- **Introduction**: Get to know the basics.
-- **Installation**: Step-by-step guide to set up the application.
-- **Configuration**: Learn how to configure the application.
-- **Examples**: Check out some practical examples.
-- **FAQ**: Frequently Asked Questions.
+### Krok 1: Obsah /app složky
 
-## Getting Started
+Složka /app obsahuje mnoho důležitého obsahu pro ovládání routeru aplikace, dává funkcionalitu routování.
 
-### Step 1: Introduction
+#### Specificky důležité složky jsou:
 
-The `Project Structure` section introduces you to the core concepts and functionalities of our application. It is designed to help you understand the essentials and get started quickly.
+- [loading.jsx/tsx -- pro načítaní]("/docs/useful/loading")
+- [sitemap.ts -- generování sitemapy aplikace]("/docs/useful/sitemap")
+- [favicon.ico -- icona aplikace]("/docs/useful/favicon")
+- [globals.css -- hlavní css složka]("/docs/useful/globals-css")
+- page.tsx -- obsah hlavní stránky
+- layout.tsx -- root layout aplikace
 
-### Step 2: Installation
+### Krok 2: Komponenty
 
-Follow these steps to install the necessary components:
+Slouží k zjednodušení importů komponent
+`@/components/...`
 
-1. **Install Node.js**: Ensure you have Node.js installed.
-2. **Clone the Repository**: Clone our GitHub repository to your local machine.
-   ```bash
-   git clone https://github.com/your-repo/your-project.git
-   ```
-3. **Install Dependencies**: Navigate to the project directory and install dependencies.
-   ```bash
-   cd your-project
-   npm install
-   ```
+#### Top level komponenty
 
-### Step 3: Configuration
+Jenom hlavička a footer
 
-Configure your application by creating a `config.json` file and setting the required parameters.
+- [Komponenta hlavičky]("/docs/components/header")
+- [Komponenta footer]("https://www.hyperui.dev/components/marketing/footers")
 
-### Step 4: Examples
+#### Využití `/components/ui`
 
-Here are some examples to help you get started:
+- Většinou pro komponenty třetích stran které nechci měnit
+- Stažené komponenty ze [shadcn ui](https://ui.shadcn.com/docs/components)
 
-```jsx
-// Basic usage example
-import React from "react";
-import { ExampleComponent } from "your-library";
+#### Využití `/components/shared`
 
-function App() {
-  return (
-    <div>
-      <ExampleComponent />
-    </div>
-  );
-}
+- Moje komponenty, zjednodušení ve formě komponenty co použiju na více částech aplikace
+- Například galerii nechám v `/components/shared` protože ji použiji na více částech
+- Mohou zde být i sekce jako CTA které použiji vícekrát na jiních routách
 
-export default App;
-```
+### Krok 3: Knihovna
 
-### Step 5: FAQ
+Obsahuje kód jako algoritmy pro optimalizaci nebo použité knihovny třetích stran
+`@/lib/...`
 
-Find answers to common questions in our [FAQ section](#).
+#### Příklad
 
-## Conclusion
-
-The `Project Structure` section is your starting point for exploring the application. Follow the steps above to get started quickly and easily.
+- Reference na Prismu nebo na Redis DB se vytváří tady
+- Algoritmy jako deep copy nebo deep merge

@@ -9,6 +9,15 @@ export const ROUTES = [
     ],
   },
   {
+    title: "Komponenty",
+    href: "components",
+    items: [
+      { title: "Header", href: "/header" },
+      { title: "Galerie", href: "/gallery" },
+      { title: "Animovaný wrapper", href: "/animated-div" },
+    ],
+  },
+  {
     title: "Server Actions",
     href: "server-actions",
     items: [
@@ -47,6 +56,10 @@ export const ROUTES = [
     items: [
       { title: "Sitemap", href: "/sitemap" },
       { title: "Favicon", href: "/favicon" },
+      { title: "Schovaná složka", href: "/hidden-folder" },
+      { title: "Nastavení načítání", href: "/loading" },
+      { title: "Globals CSS", href: "/globals-css" },
+      { title: "Typescript v nextjs", href: "/types" },
     ],
   },
 ];

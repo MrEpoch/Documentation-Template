@@ -1,0 +1,44 @@
+---
+title: Globals css soubor
+description: Jak používám globals css v projektu.
+---
+
+Mé využití globals.css je poměrně jednoduché, jenom na barvy a css obsah na který není tailwindcss class.
+
+## Moje oblíbené tailwindcss shorthand classy
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .huge-heading {
+    @apply sm:text-9xl text-6xl font-bebas font-medium pb-4 text-gray-900;
+  }
+
+  h1 {
+    @apply text-2xl font-extrabold tracking-tight text-center leading-none text-gray-900 md:text-4xl lg:text-5xl dark:text-white;
+  }
+
+  .description-p {
+    @apply text-sm font-normal lg:text-lg;
+  }
+
+  .h-view-container {
+    @apply min-h-screen w-full flex flex-col;
+  }
+
+  .max-w-container {
+    @apply mx-auto max-w-screen-xl w-full container sm:px-6 lg:px-8 py-24;
+  }
+
+  body {
+    @apply scroll-smooth;
+  }
+}
+```
+
+## Reference na dokumentaci
+
+1. **[Jak psát CSS s nextjs](https://nextjs.org/docs/app/building-your-application/styling)**

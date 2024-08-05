@@ -1,0 +1,41 @@
+---
+title: Schovaná složka
+description: Jak využít schované složky které jsou v /app a nejsou routované
+---
+
+Když vytvoříme složku s \_ nazačátku tak bude složka v /app neroutované a mohu jí použít
+na komponenty nebo na cokoliv co nechci mít jako cestu url
+
+Já většinou používám \_sections pro rozdělení webu na jednotlivé sekce
+
+<Tree
+  className="p-2 overflow-hidden rounded-md bg-background"
+  initialExpandedItems={["1", "2", "3", "4", "5", "7", "8"]}
+>
+  <Folder element="src" value="1">
+    <Folder value="2" element="app">
+      <File value="3" className="py-0 rounded-sm" isSelectable={false}>
+        <p className="m-0">...</p>
+      </File>
+      <Folder value="4" element="_sections"></Folder>
+    </Folder>
+    <Folder isSelectable={false} value="5" element="components">
+      <File isSelectable={false} value="6" className="py-0 rounded-sm">
+        <p className="m-0">...</p>
+      </File>
+    </Folder>
+    <Folder isSelectable={false} value="7" element="lib">
+      <File isSelectable={false} value="8">
+        <p>...</p>
+      </File>
+    </Folder>
+  </Folder>
+</Tree>
+
+## Vytvoření
+
+Pojmenování složky s podtržítkem na začátku vytvoří neroutovanou složku, např \_sections
+
+## Reference na dokumentaci
+
+1. **[Dokumentace nextjs o privátní složce](https://nextjs.org/docs/app/building-your-application/routing/colocation#project-organization-features)**

@@ -1,0 +1,32 @@
+---
+title: Typescript
+description: Používání typescriptu v aplikaci
+---
+
+<Tree
+  className="p-2 overflow-hidden rounded-md bg-background"
+  initialExpandedItems={["1", "2", "3", "4", "5", "7", "8"]}
+>
+  <Folder element="src" value="1">
+    <Folder value="2" element="app">
+      <File value="3" className="py-0 rounded-sm" isSelectable={false}>
+        <p className="m-0">...</p>
+      </File>
+    </Folder>
+    <Folder isSelectable={false} value="7" element="types">
+      <File isSelectable={false} value="8">
+        <p>index.d.ts</p>
+      </File>
+    </Folder>
+  </Folder>
+</Tree>
+
+## Vytvoření
+
+Vyrobíme složku /types kterou lze referencovat s `@/types/...`
+
+Většinou složku používám pro držení interfaců a typů
+
+## Reference na dokumentaci
+
+1. **[Typescript s Nextjs](https://nextjs.org/docs/app/building-your-application/configuring/typescript)**
