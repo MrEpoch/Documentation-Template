@@ -1,0 +1,52 @@
+---
+title: Directus
+description: Přidání directus headless CMS do aplikace
+---
+
+## Instalace
+
+```bash
+pnpm i @directus/sdk
+```
+
+<Note title="Povolení číst" type="success">
+  V directus CMS musíme povolit uživatelům číst data jináč je nebudeme most
+  získat a directus odmítne spojení. - [Návod na
+  vypnutí](https://docs.directus.io/getting-started/quickstart.html#_5-set-roles-permissions)
+  - [Pokročilé případy s
+  auth](https://docs.directus.io/guides/sdk/authentication.html)
+</Note>
+
+## Vytvoření
+
+Do složky `/lib` přidáme soubor `directus.ts` ve kterém bude reference na directus který budeme používat.
+
+```typescript
+import { createDirectus, rest } from "@directus/sdk";
+
+const directus = createDirectus("https://directus.example.com").with(rest());
+
+export default directus;
+```
+
+<Note title="Next Cache" type="success">
+    Nextjs má automaticky nastaveno `force-cache` což může udělat situaci kdy nám aplikace vrátí stará data
+
+    **Takhle to vypneme**
+    ```typescript
+    const directus = createDirectus('https://directus.example.com').with(
+      rest({
+        onRequest: (options) => ({ ...options, cache: 'no-store' }),
+      })
+    );
+    ```
+
+</Note>
+
+## Reference na server akce
+
+- **[Directus server akce](/docs/server-actions/directus)**
+
+## Reference na dokumentaci
+
+1. **[Directus dokumentace](https://docs.directus.io/guides/headless-cms/build-static-website/next.html)**

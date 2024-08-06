@@ -6,6 +6,7 @@ export const ROUTES = [
     items: [
       { title: "Úvod", href: "/introduction" },
       { title: "Struktura", href: "/project-structure" },
+      { title: "Directus Auth", href: "/auth-directus" },
     ],
   },
   {
@@ -21,6 +22,7 @@ export const ROUTES = [
     title: "Server Actions",
     href: "server-actions",
     items: [
+      { title: "Directus akce", href: "/directus" },
       { title: "getSession", href: "/getSession" },
       { title: "getToken", href: "/getToken" },
       { title: "getRole", href: "/getRole" },
@@ -61,6 +63,11 @@ export const ROUTES = [
       { title: "Globals CSS", href: "/globals-css" },
       { title: "Typescript v nextjs", href: "/types" },
     ],
+  },
+  {
+    title: "Knihovny",
+    href: "libs",
+    items: [{ title: "Directus", href: "/directus" }],
   },
 ];
 

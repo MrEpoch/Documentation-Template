@@ -1,0 +1,71 @@
+---
+title: Directus server akce
+description: Server akce co používám s directus cms
+---
+
+Několik method které používám ke komunikaci s directusem
+
+## Setup
+
+[Directus setup](/docs/libs/directus)
+
+## Server akce
+
+### Read akce
+
+```typescript
+"use server";
+import directus from "@/lib/directus";
+import { readItems, readItem } from "@directus/sdk";
+
+export async function getItems(collectionName: string) {
+  return directus.request(readItems(collectionName));
+}
+
+// Returns only object with single element, title
+
+export async function getItemsWithTitle(collectionName: string) {
+  return directus.request(
+    readItems(collectionName, {
+      fields: ["title"],
+    }),
+  );
+}
+
+// Returns items with all fields present
+
+export async function getItemsWithAllFields(collectionName: string) {
+  return directus.request(
+    readItems(collectionName, {
+      fields: ["*"],
+    }),
+  );
+}
+
+// Returns items with all fields present and even nested fields of author
+// Meaning that it returns all authors who made that specific item
+
+export async function getItemsWithAllFields(collectionName: string) {
+  return directus.request(
+    readItems(collectionName, {
+      fields: ["*", { author: ["*"] }],
+    }),
+  );
+}
+
+export async function getItem(collectionName: string, itemId: string) {
+  return directus.request(readItem(collectionName, itemId));
+}
+```
+
+---
+
+### Write akce
+
+```typescript
+"use server";
+import directus from "@/lib/directus";
+import { createItem } from "@directus/sdk";
+
+export async function addItem(collectionName: string, data: any) {}
+```

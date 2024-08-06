@@ -1,0 +1,105 @@
+---
+title: Directus Authentikace
+description: Directus CMS authentikace
+---
+
+## Příprava
+
+První stáhneme directus a připravíme složku podle:
+[Directus nastavení](/docs/libs/directus)
+
+Na directusu musíme vypnout email verify v **`/settings/project` user registration**
+
+<Note title="Poznámka" type="success">
+  Pokud máme vlastní mail SMTP server nemusíme ale jináč se nebude nikdo moct
+  přihlásit protože nelze poslat ověřovací email.
+</Note>
+
+### Změníme `directus.ts`
+
+```typescript
+import { createDirectus, rest, authentication } from "@directus/sdk";
+
+const directus = createDirectus(process.env.DIRECTUS_URL)
+  .with(authentication("cookie", { credentials: "include", autoRefresh: true }))
+  .with(rest({ credentials: "include" }));
+
+export default directus;
+```
+
+- musíme do složky `.env.local` přidat `DIRECTUS_URL`, místo kde je directus hostovaný např `https://directus.example.com`
+- používá JWT token pro authentikaci
+
+## Server akce
+
+Celé authentikace bude v nextjs server akcích
+
+### Typescript
+
+```typescript
+export interface userTokenType {
+  accessToken: string;
+  refreshToken: string;
+}
+```
+
+### Akce
+
+```typescript
+'use server';
+import { cookies } from "next/headers";
+import directus from "./directus";
+import { registerUser } from "@directus/sdk";
+import { userTokenType } from "@/types";
+
+export async function handleLogout() {
+  cookies().delete(process.env.DIRECTUS_COOKIE_NAME);
+}
+
+export async function userSession() {
+  let token = undefined;
+  const cookie = cookies().get(process.env.DIRECTUS_COOKIE_NAME);
+  if (cookie?.value) {
+    token = JSON.parse(cookie?.value);
+  }
+
+  const user = {} as userTokenType;
+
+  if (token != undefined) {
+    user.accessToken = token.data.access_token;
+    user.refreshToken = token.data.refresh_token;
+  }
+
+  return user;
+}
+
+export async function RegisterDirectus(data: { email: string, password: string }) {
+  try {
+    const { email, password } = data;
+    const result = await directus.request(
+      registerUser(email, password)
+    );
+
+    return { message: "Účet vytvořen!", status: 201 };
+  } catch (e: any) {
+    console.log(e);
+    const code = e.errors[0].extensions.code;
+    if (code === "RECORD_NOT_UNIQUE") {
+      return { message: "Tenhle uživatel již existuje.", status: 400 };
+    }
+    return {
+      message: "Nastala neočekávaná chyba.",
+      status: 500,
+    }
+  }
+}
+
+export async function LoginDirectus(data: { email: string, password: string }) {
+  try {
+    const { email, password } = data;
+    const result = await directus.login(email, password);
+  }
+}
+```
+
+## Reference na zdroje
