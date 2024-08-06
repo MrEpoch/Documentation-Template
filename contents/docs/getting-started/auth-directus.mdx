@@ -21,7 +21,7 @@ Na directusu musíme vypnout email verify v **`/settings/project` user registrat
 import { createDirectus, rest, authentication } from "@directus/sdk";
 
 const directus = createDirectus(process.env.DIRECTUS_URL)
-  .with(authentication("cookie", { credentials: "include", autoRefresh: true }))
+  .with(authentication("json", { credentials: "include", autoRefresh: true }))
   .with(rest({ credentials: "include" }));
 
 export default directus;
@@ -40,6 +40,7 @@ Celé authentikace bude v nextjs server akcích
 export interface userTokenType {
   accessToken: string;
   refreshToken: string;
+  expiresAt: number;
 }
 ```
 
@@ -49,10 +50,14 @@ export interface userTokenType {
 'use server';
 import { cookies } from "next/headers";
 import directus from "./directus";
-import { registerUser } from "@directus/sdk";
+import { registerUser, refresh, logout } from "@directus/sdk";
 import { userTokenType } from "@/types";
 
 export async function handleLogout() {
+  const user = await userSession();
+  await directus.request(
+    logout(user.refreshToken)
+  )
   cookies().delete(process.env.DIRECTUS_COOKIE_NAME);
 }
 
@@ -68,9 +73,19 @@ export async function userSession() {
   if (token != undefined) {
     user.accessToken = token.data.access_token;
     user.refreshToken = token.data.refresh_token;
+    user.expiresAt = token.data.expires_at;
   }
 
   return user;
+}
+
+export async function getAccessToken {
+  const user = await userSession();
+  const token = await directus.request(
+    refresh("json", user.refreshToken)
+  );
+  cookies().set(COOKIE_NAME, JSON.stringify(token));
+  return user.accessToken;
 }
 
 export async function RegisterDirectus(data: { email: string, password: string }) {
@@ -80,7 +95,7 @@ export async function RegisterDirectus(data: { email: string, password: string }
       registerUser(email, password)
     );
 
-    return { message: "Účet vytvořen!", status: 201 };
+    return { message: "Účet vytvořen!", status: 200 };
   } catch (e: any) {
     console.log(e);
     const code = e.errors[0].extensions.code;
@@ -98,8 +113,25 @@ export async function LoginDirectus(data: { email: string, password: string }) {
   try {
     const { email, password } = data;
     const result = await directus.login(email, password);
+    cookies().set(process.env.DIRECTUS_COOKIE_NAME, JSON.stringify(result));
+
+    return { message: "Přihlášen!", status: 200 };
+  } catch (e: any) {
+    console.log(e);
+    const code = e.errors[0].extensions.code;
+    if (code === "INVALID_CREDENTIALS") {
+      return { message: "Nesprávné heslo.", status: 400 };
+    }
+    return {
+      message: "Nastala neočekávaná chyba.",
+      status: 500,
+    }
   }
 }
 ```
+
+## Integrace
+
+- [Form akce](/docs/components/auth-form)
 
 ## Reference na zdroje

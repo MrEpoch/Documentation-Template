@@ -54,7 +54,7 @@ export default function Search() {
             <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500 dark:text-neutral-400" />
             <Input
               className="w-full rounded-md bg-muted border h-9 pl-10 pr-4 text-sm shadow-sm "
-              placeholder="Search documentation..."
+              placeholder="Hledat v dokumentaci..."
               type="search"
             />
             <div className="sm:flex hidden absolute top-1/2 -translate-y-1/2 right-2 text-xs font-medium font-mono items-center gap-0.5 dark:bg-neutral-700 bg-zinc-200 p-1 rounded-sm">
@@ -75,7 +75,7 @@ export default function Search() {
           </DialogHeader>
           {filteredResults.length == 0 && searchedInput && (
             <p className="text-muted-foreground mx-auto mt-2 text-sm">
-              No results found for{" "}
+              Žádný výsledek pro{" "}
               <span className="text-primary">{`"${searchedInput}"`}</span>
             </p>
           )}

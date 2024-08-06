@@ -1,7 +1,6 @@
 import { ModeToggle } from "@/components/theme-toggle";
-import { GithubIcon, TwitterIcon, HexagonIcon } from "lucide-react";
+import { HexagonIcon } from "lucide-react";
 import Link from "next/link";
-import { buttonVariants } from "./ui/button";
 import Search from "./search";
 import Anchor from "./anchor";
 import { SheetLeftbar } from "./leftbar";
@@ -10,24 +9,12 @@ import { SheetClose } from "@/components/ui/sheet";
 
 export const NAVLINKS = [
   {
-    title: "Documentation",
+    title: "Dokumentace",
     href: `/docs/${page_routes[0].href}`,
   },
   {
-    title: "Examples",
-    href: "#",
-  },
-  {
-    title: "Guides",
-    href: "#",
-  },
-  {
-    title: "Community",
-    href: "#",
-  },
-  {
     title: "Blog",
-    href: "#",
+    href: "https://portfolio.stencukpage.com/blog",
   },
 ];
 
@@ -51,21 +38,6 @@ export function Navbar() {
           <div className="flex items-center gap-2">
             <Search />
             <div className="flex">
-              <Link
-                href="https://github.com/nisabmohd/Docs-Stater-Template"
-                className={buttonVariants({ variant: "ghost", size: "icon" })}
-              >
-                <GithubIcon className="h-[1.1rem] w-[1.1rem]" />
-              </Link>
-              <Link
-                href="#"
-                className={buttonVariants({
-                  variant: "ghost",
-                  size: "icon",
-                })}
-              >
-                <TwitterIcon className="h-[1.1rem] w-[1.1rem]" />
-              </Link>
               <ModeToggle />
             </div>
           </div>
@@ -79,7 +51,7 @@ export function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5">
       <HexagonIcon className="w-7 h-7 text-muted-foreground fill-current" />
-      <h2 className="text-md font-bold">template/docs</h2>
+      <h2 className="text-md font-bold">NextWorkflow</h2>
     </Link>
   );
 }

@@ -1,0 +1,201 @@
+---
+title: Auth form
+description: Formové auth komponenta s nextjs server akcema a zod validací
+---
+
+## Příprava
+
+Vytvářím formy s [shadcn ui](https://ui.shadcn.com) komponentama, mají skvělou integraci pro zod validátor.
+
+### Initializace shadcn ui
+
+```bash
+pnpm dlx shadcn-ui@latest init
+```
+
+### Přidání shadcn komponent
+
+```bash
+pnpm dlx shadcn-ui@latest add form input
+```
+
+- form nám automaticky stáhne react-hook-form, zod, @hookform/resolvers a pár komponent ze shadcn ui
+
+### Custom field komponent
+
+```tsx
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import React from "react";
+import { Control } from "react-hook-form";
+import { formSchema } from "@/components/shared/AuthForm";
+import { z } from "zod";
+
+type customFieldType = {
+  control: Control<z.infer<typeof formSchema>> | undefined;
+  name: keyof z.infer<typeof formSchema>;
+  render: (props: { field: any }) => React.ReactNode;
+  className?: string;
+  formLabel?: string;
+};
+
+export default function CustomField({
+  control,
+  render,
+  name,
+  formLabel,
+  className = "",
+}: customFieldType) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={className}>
+          {formLabel && <FormLabel>{formLabel}</FormLabel>}
+          <FormControl>{render({ field })}</FormControl>
+        </FormItem>
+      )}
+    />
+  );
+}
+```
+
+- Zjednoduší psaní ve formu
+
+### Auth form komponent
+
+```tsx
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import CustomField from "@/components/shared/CustomField";
+import { useState } from "react";
+import { register, login } from "@/lib/action";
+import { useRouter } from "next/navigation";
+
+export const formSchema = z
+  .object({
+    email: z.string().email(),
+    password: z
+      .string()
+      .min(8, { message: "Musí být 8 nebo více písmen dlouhé" })
+      .max(200, { message: "Musí být méně než 250 písmen dlouhé" }),
+    passwordConfirm: z.string().optional(),
+  })
+  .superRefine(({ password, passwordConfirm }, ctx) => {
+    if (typeof passwordConfirm === "string" && password !== passwordConfirm) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Hesla se neschodují",
+        path: ["passwordConfirm"],
+      });
+    }
+  });
+
+export default function AuthForm({ isLogin = false }: { isLogin: boolean }) {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: isLogin
+      ? {
+          email: "",
+          password: "",
+        }
+      : {
+          email: "",
+          password: "",
+          passwordConfirm: "",
+        },
+  });
+
+  const [submitting, setSubmitting] = useState(false);
+
+  const router = useRouter();
+
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    form.trigger();
+    setSubmitting(true);
+
+    const userData = {
+      email: data.email,
+      password: data.password,
+    };
+    console.log(userData);
+
+    if (isLogin) {
+      const result = await login(userData);
+      if (result.status === 200) {
+        form.reset();
+        router.push(`/`);
+        window.location.reload();
+      }
+    } else {
+      const result = await register(userData);
+      if (result.status === 200) {
+        form.reset();
+        router.push(`/`);
+        window.location.reload();
+      }
+    }
+    setSubmitting(false);
+    return;
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        encType="multipart/form-data"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8 w-full"
+        role="action-form"
+      >
+        <CustomField
+          control={form.control}
+          name="email"
+          formLabel={"Email"}
+          render={({ field }) => (
+            <Input type="email" value={field.value} {...field} />
+          )}
+        />
+        <CustomField
+          control={form.control}
+          name="password"
+          formLabel={"Heslo"}
+          render={({ field }) => (
+            <Input value={field.value} {...field} type="password" />
+          )}
+        />
+        {!isLogin && (
+          <CustomField
+            control={form.control}
+            name="passwordConfirm"
+            formLabel={"Potvrzení hesla"}
+            render={({ field }) => (
+              <Input value={field.value} {...field} type="password" />
+            )}
+          />
+        )}
+        <Button disabled={submitting} type="submit">
+          {isLogin ? "Přihlásit" : "Registrovat"}
+        </Button>
+      </form>
+    </Form>
+  );
+}
+```
+
+## Integrace
+
+- [Directus auth akce](/docs/getting-started/auth-directus)
+
+## Reference na zdroje
+
+1. **[Shadcn form](https://ui.shadcn.com/docs/components/form)**
