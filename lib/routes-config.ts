@@ -7,6 +7,7 @@ export const ROUTES = [
       { title: "Úvod", href: "/introduction" },
       { title: "Struktura", href: "/project-structure" },
       { title: "Directus Auth", href: "/auth-directus" },
+      { title: "Bezpečnostní hlavičky", href: "/security-headers" },
     ],
   },
   {
@@ -14,16 +15,23 @@ export const ROUTES = [
     href: "components",
     items: [
       { title: "Header", href: "/header" },
+      { title: "Faq", href: "/faq" },
       { title: "Galerie", href: "/gallery" },
       { title: "Animovaný wrapper", href: "/animated-div" },
-      { title: "Form akce", href: "/auth-form" },
+      { title: "Auth form", href: "/auth-form" },
       { title: "Web3form kontakt", href: "/web3forms-contact-form" },
+      { title: "Obrázkový form", href: "/image-form" },
     ],
   },
   {
     title: "Server Actions",
     href: "server-actions",
-    items: [{ title: "Directus akce", href: "/directus" }],
+    items: [
+      { title: "Directus akce", href: "/directus" },
+      { title: "Prisma akce", href: "/prisma" },
+      { title: "Lucia auth akce", href: "/lucia-auth" },
+      { title: "Obrázkový handler", href: "/image-handler" },
+    ],
   },
   {
     title: "Užitečné",
@@ -40,7 +48,12 @@ export const ROUTES = [
   {
     title: "Knihovny",
     href: "libs",
-    items: [{ title: "Directus", href: "/directus" }],
+    items: [
+      { title: "Directus", href: "/directus" },
+      { title: "Lucia auth", href: "/lucia-auth" },
+      { title: "Prisma ORM", href: "/prisma" },
+      { title: "Zod validace", href: "/zod" },
+    ],
   },
 ];
 

@@ -1,0 +1,56 @@
+---
+title: Prisma
+description: Přidání prisma ORM
+---
+
+## Instalace
+
+### Stáhnutí prismy
+
+```bash
+pnpm i prisma --save-dev
+```
+
+### Initializace prismy
+
+```bash
+pnpm dlx prisma init
+```
+
+### Updatovat soubor `.env`
+
+```markdown
+DATABASE_URL=--moje-databaze--
+```
+
+## Vytvoření
+
+Do složky `/lib` přidáme soubor `prisma.ts` ve kterém bude reference na prismu kterou budeme používat.
+
+```typescript
+import { PrismaClient } from "@prisma/client";
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
+
+export const prisma = globalForPrisma.prisma ?? new PrismaClient();
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+```
+
+<Note title="Přidat NODE_ENV" type="success">
+    Pro optimalizaci používám NODE_ENV na trackování prostředí ve kterém prisma poběží.
+
+    - NODE_ENV=production #produkce
+    - NODE_ENV=development #vývoj
+
+</Note>
+
+## Reference na server akce
+
+- **[Prisma server akce](/docs/server-actions/prisma)**
+
+## Reference na dokumentaci
+
+1. **[Prisma dokumentace](https://www.prisma.io/docs/getting-started/quickstart)**

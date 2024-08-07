@@ -1,0 +1,103 @@
+---
+title: Zod validace
+description: Validátor dat zod
+---
+
+Je pravidlem vždy na server validovat data které přišla z klientové strany.
+
+## Instalace
+
+### Stáhnutí zodu
+
+```bash
+pnpm i zod
+```
+
+## Použití
+
+### Schématická validace
+
+```typescript
+import { z } from "zod";
+
+const dataSchema = z.object({
+  name: z
+    .string()
+    .min(3, { message: "Musí být 3 nebo více charakterů dlouhé" })
+    .max(50, { message: "Musí být méně než 50 charakterů dlouhé" }),
+  email: z.string().email({ message: "Musí být pravý email" }),
+  price: z.number(),
+  isUser: z.boolean(),
+  isLogged: z.boolean().optional(),
+});
+
+const data = await dataSchema.safeParseAsync({
+  name: "Jméno",
+  email: "email",
+  price: 100,
+  isUser: true,
+  isLogged: true,
+});
+
+if (data.success) {
+  return "OK";
+} else {
+  return "Err";
+}
+```
+
+### Obrázková validace
+
+```typescript
+import { z } from "zod";
+
+const imageValidation = z
+  .any()
+  .refine((img: File) => img?.size <= 5 * 1024 * 1024, `Max image size is 5MB.`)
+  .refine(
+    (img: File) => FILE_TYPES.includes(img?.type),
+    "Only .jpg, .jpeg, .png and .webp formats are supported.",
+  );
+
+const formData = new FormData();
+formData.append(
+  "image",
+  new File(["hello"], "hello.png", { type: "image/png" }),
+);
+const validation = imageValidation.safeParse(formData);
+if (validation.success) {
+  return "OK";
+} else {
+  return "Err";
+}
+```
+
+- Obrázek musí být ve formDatech pro validaci
+- Obrázkový upload [reference](/docs/components/image-form)
+
+### Jednotlivá validace
+
+```typescript
+import { z } from "zod";
+
+const emailZod = z.string().email({ message: "Musí být pravý email" });
+const nameZod = z
+  .string()
+  .min(3, { message: "Jméno musí mít alespoň 3 znaky" })
+  .max(50, { message: "Jméno nesmí překročit 50 znaků" });
+
+const emailValidation = emailZod.safeParse("mail@mail.cz");
+const nameValidation = nameZod.safeParse("John doe");
+
+if (emailValidation.success && nameValidation.success) {
+  return "OK";
+} else {
+  return "Err";
+}
+```
+
+- Můžeme testovat jednotlivé části místo celých objektů
+
+## Reference na dokumentaci
+
+1. **[Zod dokumentace](https://zod.dev/?id=introduction)**

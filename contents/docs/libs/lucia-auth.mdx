@@ -1,0 +1,89 @@
+---
+title: Lucia auth
+description: Použití lucia auth pro authentikaci
+---
+
+## Instalace
+
+### Knihovna instalace
+
+```bash
+pnpm i lucia
+```
+
+### Adaptér na databázi
+
+```bash
+pnpm i @lucia-auth/adapter-prisma
+```
+
+<Note title="Více adaptérů" type="success">
+  Adaptéry na databáze [lucia-auth](https://lucia-auth.com/database/)
+</Note>
+
+### Přidání schématu do DB
+
+```ts
+model User {
+  id       String    @id
+  sessions Session[]
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+
+  user      User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+```
+
+- Schéma ve [prismě](https://www.prisma.io/docs/orm/prisma-schema/overview)
+
+<Note title="Prisma setup" type="success">
+  Inicializace [prismy](/docs/libs/prisma)
+</Note>
+
+## Vytvoření
+
+Do složky `/lib` přidáme soubor `lucia.ts` ve kterém bude reference na luciaAuth který budeme používat.
+
+```typescript
+import { Lucia } from "lucia";
+import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
+import { prisma } from "@/lib/prisma";
+
+const adapter = new PrismaAdapter(prisma.session, prisma.user);
+
+export const lucia = new Lucia(adapter, {
+  sessionCookie: {
+    // this sets cookies with super long expiration
+    // since Next.js doesn't allow Lucia to extend cookie expiration when rendering pages
+    expires: false,
+    attributes: {
+      // set to `true` when using HTTPS
+      secure: process.env.NODE_ENV === "production",
+    },
+  },
+});
+
+// Důležité!
+declare module "lucia" {
+  interface Register {
+    Lucia: typeof lucia;
+  }
+}
+```
+
+<Note title="NODE_ENV" type="success">
+  Pro bezpečnost nastavit: - NODE_ENV=production #produkce -
+  NODE_ENV=development #vývoj
+</Note>
+
+## Reference na server akce
+
+- **[Lucia auth server akce](/docs/server-actions/lucia-auth)**
+
+## Reference na dokumentaci
+
+1. **[Lucia auth dokumentace](https://lucia-auth.com/getting-started/nextjs-app)**

@@ -1,0 +1,53 @@
+---
+title: Obrázkový handler server akce
+description: Server akce co validuje obrázek
+---
+
+## Setup
+
+```bash
+pnpm i zod
+```
+
+## Server akce
+
+```typescript
+import { z } from "zod";
+import { storage } from "@/lib/storage";
+
+const FILE_TYPES = ["image/jpg", "image/jpeg", "image/png", "image/webp"];
+
+const imageValidation = z
+  .any()
+  .refine(
+    (img: File) => img?.size <= 5 * 1024 * 1024,
+    `Maximální velikost je 5MB.`,
+  )
+  .refine(
+    (img: File) => FILE_TYPES.includes(img?.type),
+    "Jenom .jpg, .jpeg, .png, .webp je povoleno.",
+  );
+
+export async function imageUpload(formData: FormData) {
+  try {
+    const validatedImage = await imageValidation.safeParseAsync(
+      image.get("image"),
+    );
+
+    if (!validatedImage.success) {
+      throw new Error("invalid-image");
+    }
+    const storedImage = await storage.store(validatedImage.data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+```
+
+## Integrace
+
+- [Obrázkový form](/docs/components/image-form)
+
+## Reference na dokumentaci
+
+1. **[Zod dokumentace](https://zod.dev/?id=introduction)**

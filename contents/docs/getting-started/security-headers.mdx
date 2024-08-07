@@ -1,0 +1,182 @@
+---
+title: Bezpečnostní hlavičky
+description: Zabezpečení aplikace, oprávnění, souhlasy a více důležitých hlaviček.
+---
+
+## Čtení o hlavičkách
+
+- [OWASP bezpečnostní hlavičky](https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html)
+- [Roadmap api bezpečnost](https://roadmap.sh/best-practices/api-security)
+
+## Implementace v nextjs
+
+Většinou hlavičky nastavíme v nginx nebo apache server klientech, ale nextjs má to možnost také.
+
+### Middleware hlavičková implementace
+
+<Note title="Kdy použít middleware" type="success">
+  Nejlépe použít middleware když potřebujeme generovat nonce pro běh scriptů a
+  stylů třetích stran nebo když je třeba použít inline styly nebo scripty.
+</Note>
+
+```typescript
+import { NextRequest, NextResponse } from "next/server";
+
+export function middleware(request: NextRequest) {
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
+    style-src 'self' 'nonce-${nonce}';
+    img-src 'self' blob: data:;
+    font-src 'self';
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    upgrade-insecure-requests;
+`;
+  // Replace newline characters and spaces
+  const contentSecurityPolicyHeaderValue = cspHeader
+    .replace(/\s{2,}/g, " ")
+    .trim();
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+
+  requestHeaders.set(
+    "Content-Security-Policy",
+    contentSecurityPolicyHeaderValue,
+  );
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+  response.headers.set(
+    "Content-Security-Policy",
+    contentSecurityPolicyHeaderValue,
+  );
+
+  return response;
+}
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    {
+      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
+      missing: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+    },
+  ],
+};
+```
+
+- Dokážeme CSP nastavit na routy které chceme pomocí `config = { matcher: ... }`
+- [Nextjs Middleware CSP](https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy)
+
+### Next.config hlavičková implementace
+
+<Note title="Kdy použít Next.config" type="success">
+  V momentě kdy nepotřebujeme nic dynamicky vygenerovat jako nonce.
+</Note>
+
+```typescript
+module.exports = {
+  async headers() {
+    return [
+      {
+        source: "/api/:path*",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*", // Set your origin
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, POST, PUT, DELETE, OPTIONS",
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, Authorization",
+          },
+        ],
+      },
+    ];
+  },
+};
+```
+
+- [Nextjs Next.config](https://nextjs.org/docs/app/api-reference/next-config-js/headers)
+
+#### Můj Next.config 'templát', který používám nejvíce
+
+```typescript
+module.exports = {
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: "default-src 'self'",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains; preload;",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "Cross-Origin-Embedder-Policy",
+            value: "require-corp",
+          },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
+          },
+          {
+            key: "Cross-Origin-Resource-Policy",
+            value: "same-origin",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value:
+              "microphone=(), camera=(), geolocation=(), fullscreen=(), payment=()",
+          },
+        ],
+      },
+    ];
+  },
+};
+```
+
+- CSP config se mění podle potřeb
+
+## Reference na zdroje
+
+1. [OWASP bezpečnostní hlavičky](https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html)
+2. [Nextjs Middleware CSP](https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy)
+3. [Nextjs Next.config](https://nextjs.org/docs/app/api-reference/next-config-js/headers)
+4. [Api bezpečnost](https://roadmap.sh/best-practices/api-security)

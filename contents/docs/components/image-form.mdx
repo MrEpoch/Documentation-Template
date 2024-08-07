@@ -1,0 +1,215 @@
+---
+title: Obrázkový upload form
+description: Form s obrázkovým uploadem
+---
+
+## Příprava
+
+Vytvářím formy s [shadcn ui](https://ui.shadcn.com) komponentama, mají skvělou integraci pro zod validátor.
+
+### Initializace shadcn ui
+
+```bash
+pnpm dlx shadcn-ui@latest init
+```
+
+### Přidání shadcn komponent
+
+```bash
+pnpm dlx shadcn-ui@latest add form input
+```
+
+- form nám automaticky stáhne react-hook-form, zod, @hookform/resolvers a pár komponent ze shadcn ui
+
+### Custom field komponent
+
+```tsx
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import React from "react";
+import { Control } from "react-hook-form";
+import { formSchema } from "@/components/shared/AuthForm";
+import { z } from "zod";
+
+type customFieldType = {
+  control: Control<z.infer<typeof formSchema>> | undefined;
+  name: keyof z.infer<typeof formSchema>;
+  render: (props: { field: any }) => React.ReactNode;
+  className?: string;
+  formLabel?: string;
+};
+
+export default function CustomField({
+  control,
+  render,
+  name,
+  formLabel,
+  className = "",
+}: customFieldType) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={className}>
+          {formLabel && <FormLabel>{formLabel}</FormLabel>}
+          <FormControl>{render({ field })}</FormControl>
+        </FormItem>
+      )}
+    />
+  );
+}
+```
+
+- Zjednoduší psaní ve formu
+
+### Komponent `ImageHandler.tsx`
+
+```tsx
+"use client";
+import Image from "next/image";
+import React from "react";
+import CustomField from "../CustomField";
+import { Input } from "@/components/ui/input";
+
+interface ImageHandlerProps {
+  form: any;
+  image: File | null;
+  setImage: any;
+  savedImage?: string;
+}
+
+export default function ImageHandler({
+  form,
+  image,
+  setImage,
+  savedImage,
+}: ImageHandlerProps) {
+  return (
+    <>
+      <CustomField
+        control={form.control}
+        name="image"
+        render={({ field }) => (
+          <Input
+            role="action-input-field"
+            type="file"
+            className="w-full h-full"
+            {...field}
+            onChange={(e) => {
+              e && e.target && e.target.files && setImage(e.target.files[0]);
+            }}
+          />
+        )}
+      />
+      <div className="w-full flex justify-center">
+        {image || savedImage ? (
+          <Image
+            src={image ? URL.createObjectURL(image) : (savedImage as string)}
+            alt="uploaded image"
+            className="sm:w-[375px] max-h-[300px] min-h-[300px] h-full w-[300px] max-[375px]:w-full rounded-xl object-cover"
+            width={500}
+            height={500}
+          />
+        ) : (
+          <div className="sm:w-[375px] max-h-[300px] min-h-[300px] h-full w-[300px] max-[375px]:w-full rounded-xl object-cover bg-card" />
+        )}
+      </div>
+    </>
+  );
+}
+```
+
+### Obrázkový upload form komponent
+
+```tsx
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import ImageHandler from "@/components/shared/ImageHandler";
+import { useState } from "react";
+import { register, login } from "@/lib/action";
+import { useRouter } from "next/navigation";
+import { uploadImage } from "@/lib/action";
+
+const FILE_TYPES = ["image/jpg", "image/jpeg", "image/png", "image/webp"];
+
+export const formSchema = z.object({
+  image: z
+    .any()
+    .refine(
+      (img: File) => img?.size <= 5 * 1024 * 1024,
+      `Maximální velikost je 5MB.`,
+    )
+    .refine(
+      (img: File) => FILE_TYPES.includes(img?.type),
+      "Jenom .jpg, .jpeg, .png, .webp je povoleno.",
+    ),
+});
+
+export default function ImageForm() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {},
+  });
+
+  const [image, setImage] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const router = useRouter();
+
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    form.trigger();
+    setSubmitting(true);
+
+    if (image) {
+      const formData = new FormData();
+      formData.append("image", image);
+      const response = await uploadImage(formData);
+      if (response) {
+        router.push("/");
+      }
+    }
+
+    setSubmitting(false);
+    return;
+  }
+
+  return (
+    <Form {...form}>
+      <form
+        encType="multipart/form-data"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8 w-full"
+        role="action-form"
+      >
+        <ImageHandler
+          savedImage={data?.imageUrl}
+          form={form}
+          image={image}
+          setImage={setImage}
+        />
+        <Button disabled={submitting} type="submit">
+          Nahrát obrázek
+        </Button>
+      </form>
+    </Form>
+  );
+}
+```
+
+## Integrace
+
+- [Server akce obrázek](/docs/server-actions/image-handler)
+
+## Reference na zdroje
+
+1. **[Shadcn form](https://ui.shadcn.com/docs/components/form)**

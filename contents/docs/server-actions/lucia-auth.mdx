@@ -1,0 +1,119 @@
+---
+title: Lucia auth server akce
+description: Server akce pro authentikaci s lucia auth
+---
+
+## Setup
+
+[Lucia auth setup](/docs/libs/lucia-auth)
+
+## Server akce
+
+### Read akce
+
+```typescript
+"use server";
+import { prisma } from "@/lib/prisma";
+
+export async function getData() {
+  try {
+    const data = await prisma.data.findMany();
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export async function getDataByCategory({ category }: { category: string }) {
+  try {
+    const data = await prisma.data.findMany({
+      where: {
+        category: category,
+      },
+    });
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+// Musí být @unique v `schema.prisma`
+
+export async function getDataById({ id }: { id: string }) {
+  try {
+    const data = await prisma.data.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    return data;
+  } catch (e) {
+    console.log(e);
+  }
+}
+```
+
+---
+
+### Write akce
+
+```typescript
+"use server";
+import { prisma } from "@/lib/prisma";
+
+export async function createData(data: any) {
+  try {
+    const result = await prisma.data.create({
+      data: data,
+    });
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+```
+
+---
+
+### Update akce
+
+```typescript
+"use server";
+import { prisma } from "@/lib/prisma";
+
+export async function updateData(id: string, data: any) {
+  try {
+    const result = await prisma.data.update({
+      where: {
+        id,
+      },
+      data: data,
+    });
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+```
+
+---
+
+### Delete akce
+
+```typescript
+"use server";
+import { prisma } from "@/lib/prisma";
+
+export async function deleteData(id: string) {
+  try {
+    const result = await prisma.data.delete({
+      where: {
+        id,
+      },
+    });
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+}
+```
