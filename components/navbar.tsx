@@ -6,6 +6,7 @@ import Anchor from "./anchor";
 import { SheetLeftbar } from "./leftbar";
 import { page_routes } from "@/lib/routes-config";
 import { SheetClose } from "@/components/ui/sheet";
+import Image from "next/image";
 
 export const NAVLINKS = [
   {
@@ -15,6 +16,10 @@ export const NAVLINKS = [
   {
     title: "Blog",
     href: "https://portfolio.stencukpage.com/blog",
+  },
+  {
+    title: "Freesets",
+    href: "https://freesets.vercel.app/",
   },
 ];
 
@@ -49,8 +54,14 @@ export function Navbar() {
 
 export function Logo() {
   return (
-    <Link href="/" className="flex items-center gap-2.5">
-      <HexagonIcon className="w-7 h-7 text-muted-foreground fill-current" />
+    <Link href="/" className="flex justify-center items-center gap-2.5">
+      <Image
+        src="/logo.svg"
+        alt="Logo"
+        width={40}
+        height={40}
+        className="w-8 h-8"
+      />
       <h2 className="text-md font-bold">NextWorkflow</h2>
     </Link>
   );

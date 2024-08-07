@@ -38,10 +38,12 @@ export const ROUTES = [
     href: "useful",
     items: [
       { title: "Sitemap", href: "/sitemap" },
+      { title: "Obrázková optimalizace", href: "/image-optimalization" },
       { title: "Favicon", href: "/favicon" },
       { title: "Schovaná složka", href: "/hidden-folder" },
       { title: "Nastavení načítání", href: "/loading" },
       { title: "Globals CSS", href: "/globals-css" },
+      { title: "Bezpečnost hesla", href: "/password-secure" },
       { title: "Typescript v nextjs", href: "/types" },
     ],
   },

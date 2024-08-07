@@ -1,0 +1,87 @@
+---
+title: Obrázková optimalizace
+description: Jak optimalizovat obrázky pro nextjs.
+---
+
+## Příprava obrázků
+
+- Moje nejčastější volba pro nalezení obrázků je [Unsplash](https://unsplash.com/)
+
+### Převedení do .webp formátu
+
+- Nejlépe převedu obrázek do .webp který je menší a lepší pro web.
+- [Cloud convert](https://cloudconvert.com/)
+- [Free convert](https://www.freeconvert.com/)
+
+### Převedení loga do .svg
+
+- Je dobré převést logo co použiju na webu do svg.
+- SVG udržuje stejnou kvalitu logo, nezáleží na velikosti proto lepší pro loga
+- [Free convert](https://www.freeconvert.com/)
+
+### Snižení velikosti souboru
+
+- [Compressor.io](https://compressor.io/)
+- [tinypng](https://tinypng.com/)
+
+### Lokace obrázků
+
+- Používám `/public/assets` pro většinu obrázků ale logo nechám v `/public`
+
+## Použití obrázků v nextjs
+
+```tsx
+import { Image } from "next/image";
+
+export default function Page() {
+  return (
+    <>
+      <Image
+        src="/logo.svg"
+        alt="Logo"
+        width={200}
+        height={200}
+        priority
+        loading="eager"
+      />
+    </>
+  );
+}
+```
+
+- **priority** pro největší obrázek (s největším LCP), vypne to lazy load a načte ho dříve
+- **loading="eager"** pro vypnutí lazy loadu a rychlé načtení obrázku
+- Když je src="/logo.svg" tak to routa obrázku je `/public/logo.svg`
+
+<Tree
+  className="p-2 overflow-hidden rounded-md bg-background"
+  initialExpandedItems={["2"]}
+>
+  <Folder element="src" isSelectable={false} value="1">
+    ...
+  </Folder>
+  <Folder element="public" isSelectable={true} value="2">
+    ...
+  </Folder>
+</Tree>
+
+---
+
+```tsx
+import { Image } from "next/image";
+import logo from "../public/logo.svg";
+
+export default function Page() {
+  return (
+    <>
+      <Image src={logo} alt="Logo" fill priority loading="eager" />
+    </>
+  );
+}
+```
+
+- **fill** funguje jen pro importované obrázky, automaticky určí width and height podle velikosti containeru
+
+## Reference na dokumentaci
+
+1. **[Image komponent nextjs](https://nextjs.org/docs/app/api-reference/components/image)**
